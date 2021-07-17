@@ -34,6 +34,7 @@ resource "postgresql_database" "analytics" {
 
 resource "postgresql_role" "meltano" {
   name     = "meltano"
+  login = true
   password = "foo"
 }
 

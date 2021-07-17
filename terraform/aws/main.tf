@@ -7,13 +7,13 @@ terraform {
   }
 }
 
+# data "aws_region" "current" {
+#   provider = "aws.region"
+# }
+
 locals {
   name   = "warehouse"
-  region = var.region
-  tags = {
-    Owner       = "user"
-    Environment = "dev"
-  }
+  region = "us-west-2" #data.aws_region.current.name
 }
 
 module "vpc" {
@@ -40,8 +40,6 @@ module "vpc" {
   public_subnet_tags = {
     Name = "${local.name}-public"
   }
-
-  tags = local.tags
 
   vpc_tags = {
     Name = "vpc-${local.name}"
@@ -81,7 +79,6 @@ module "security_group" {
     }
   ]
 
-  tags = local.tags
 }
 
 module "db" {
@@ -114,5 +111,5 @@ module "db" {
   subnet_ids             = module.vpc.database_subnets
   vpc_security_group_ids = [module.security_group.security_group_id]
   publicly_accessible = true
-  tags = local.tags
+
 }
